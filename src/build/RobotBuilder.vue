@@ -1,7 +1,10 @@
 <template>
-      <div class="content">
-            <div class="preview">
+    <div class="content">
+      <div class="part-info" id="partInfo">
+      </div>
+      <div class="preview">
       <div class="preview-content">
+        <collapsibleSection>
         <div class="top-row">
           <img :src="selectedRobot.head.src"/>
         </div>
@@ -9,12 +12,14 @@
           <img :src="selectedRobot.leftArm.src" class="rotate-left"/>
           <img :src="selectedRobot.torso.src"/>
           <img :src="selectedRobot.rightArm.src" class="rotate-right"/>
-        </div>
+      </div>
         <div class="bottom-row">
           <img :src="selectedRobot.base.src"/>
         </div>
+        </collapsibleSection>
       </div>
       <button class="add-to-cart" @click="addtocart()">Add to cart</button>
+    </div>
     </div>
     <div class="top-row">
         <!-- <div class="robot-name" >
@@ -26,8 +31,7 @@
         position="top"
         @partSelected="part => selectedRobot.head=part"/>
       </div>
-    </div>
-    <div class="middle-row">
+      <div class="middle-row">
     <PartSelector
     :parts="availableParts.arms"
     position="left"
@@ -69,10 +73,20 @@
 import availableParts from '../data/parts';
 import createdHookMixin from './created-hook-mixin';
 import PartSelector from './PartSelector.vue';
+import CollapsibleSection from '../shared/CollapsibleSection.vue';
 
 export default {
   name: 'RobotBuilder',
-  components: { PartSelector },
+  beforeRouteLeave(to, from, next) {
+    if (this.addedToCart) {
+      next(true);
+    } else {
+      // eslint-disable-next-line no-restricted-globals, no-alert
+      const response = confirm('You have not added your robot to your cart, are you sure you want to leave?');
+      next(response);
+    }
+  },
+  components: { PartSelector, CollapsibleSection },
   data() {
     return {
       availableParts,
@@ -105,6 +119,7 @@ export default {
       const cost = robot.head.cost + robot.leftArm.cost
       + robot.torso.cost + robot.rightArm.cost + robot.base.cost;
       this.cart.push({ ...robot, cost });
+      this.addedToCart = true;
     },
   },
 };
@@ -250,5 +265,13 @@ td,th{
 }
 .rotate-left {
   transform: rotate(-90deg);
+}
+.part-info {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 210px;
+  height: 210px;
+  padding: 5px;
 }
 </style>
