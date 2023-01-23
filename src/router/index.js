@@ -9,10 +9,11 @@ import PartInfo from '../parts/partinfo.vue';
 import BrowseParts from '../parts/BrowseParts.vue';
 import RobotHeads from '../parts/RobotHeads.vue';
 import RobotTorsos from '../parts/RobotTorsos.vue';
-import RobotArms from '../parts/RobotoArms.vue';
-import RobotBases from '../parts/RobotoBases.vue';
+import RobotArms from '../parts/RobotArms.vue';
+import RobotBases from '../parts/RobotBases.vue';
 import sidebarStandar from '../sidebars/sidebarStandard.vue';
 import sidebarBuild from '../sidebars/sidebarBuild.vue';
+import ShoppingCart from '../cart/shoppingCart.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -68,5 +69,10 @@ export default createRouter({
       const isvalidId = Number.isInteger(Number(to.params.id));
       next(isvalidId);
     },
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: ShoppingCart,
   }],
 });
